@@ -1,13 +1,35 @@
-# Adobe Connect Session Downloader
+# Adobe Connect Session Recorder
 
-Download Adobe Connect session video and sound in merged state as a single file easily.
+Record Adobe Connect session video and merge it with session sound stream to a single file.
 
-## How It Works
+## Why and How
 
-This script uses traditional way of downloading sounds and videos of a session by adding **/output/file_name.zip** to end of a session hyperlink. There is a special case that presenter shares the document to attendees instead of sharing his/her own screen while displaying the document, therefore there will be no video stream file(s) inside the **file_name.zip** downloaded before. The way I handled it here is first script downloads the zip file, extracts flv sounds and then puts them together so we can save the entire session sound as a single sound stream file.
+Not every adobe connect classroom is downloadable and sometimes there are some restrictions by the service provider. But always there is at least one solution for every problem. In this case if you add **/output/file.zip?download.zip** to end of the link of adobe connect session you can download sound and video streams but they are not merged and you have to work with ffmpeg and merge them together.
+To give an example if your classroom link is something similar to *https://example.com/pt9pbrisgt0a/?session=breezbreezo8pdyckwkeus4dg5&proto=true* the downlaod link will be *https://example.com/pt9pbrisgt0a/output/file.zip?download=zip* .
 
-Next step is to put video streams together and make a single video file of multiple parts. As I mentioned in some cases there is no video file available. The solution isto render the class session inside a sellenium browser and get screen shots of the **body** element page periodically so we can put all shots together and make video file with a specific frame rate.
+Sometimes presenter decides to share document instead of sharing his/her own screen while displaying document and that causes some problems with the file downloaded before; it just contains sound stream(s) of class but no video will be available.  
 
-## Notes And Maybe Some Todos
+The way this script solves this problem is to get screenshots of the adobe connect browser player (rendered on selenium driver) and then putting frames (screenshots) together to produce a single video stream. Frames count varies based on resources of computer but the average frame rate is about 5.8 .
 
-This way is highly depended on ffmpeg, sellenium and system resources so I think if I could create a webapp with a backend server on a virtual server to help students make session files wihtout relying on their own system resources would be great help but have'nt decided on that yet. Feel free to do this Todo if you can.
+There are some issues with this solution. First issue is with internet connection. If your browser lose the internet connection, script can not sense and catch this event and stop recording process (precisely "doesn't catch it", not implemented yet)  so if it gets disconnected too many times player may exit the session. Another similar case is when player is in a "Loading" state, this case is not implemented yet too.
+Second issue is about the frame rate, it takes some time for selenium to save screenshot of **body** element and this is the reason why frame rate is about 5.8 .
+
+## How to
+First install `ffmpeg`, `python` and firfox `geckodriver` and make sure they are all in **$PATH**.
+Then install dependencies:
+```bash
+python -m pip install -r requirements.txt
+```
+or
+```bash
+pip install -r requirements.txt
+```
+
+After downloading class files extract all and move sound file to scripts directory.
+Setup execution permission for `start.sh`:
+```bash
+sudo chmod 755 start.sh
+```
+Run this command to start the process:
+```bash
+./start.sh <session_link> <sound_stream>

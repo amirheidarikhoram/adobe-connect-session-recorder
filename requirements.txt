@@ -1,0 +1,2 @@
+librosa==0.8.0
+selenium==3.141.0

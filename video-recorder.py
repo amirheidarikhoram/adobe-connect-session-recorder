@@ -71,23 +71,16 @@ backward15 = driver.find_element_by_id(options['backwardId'])
 forward15 = driver.find_element_by_id(options['forwardId'])
 
 # again wait - no purpose, I just decided to wait here with no reason
-sleep(1)
+sleep(60)
 
 # play
 playButton.click()
-
-# wait for 40 secs to give web app to download first chunks of video and then 
-sleep(40)
-
-# make player jump backward for 45 secs to start recording from first seconds
-backward15.click()
-backward15.click()
 
 # define a function to handle timing in another frame
 def waitAndStopRecording(controller,duration):
     firstTic = time.perf_counter()
     toc = time.perf_counter()
-    while toc - firstTic < duration:
+    while toc - firstTic < duration and controller.isRecording:
         toc = time.perf_counter()
     controller.stop()
         
@@ -101,10 +94,15 @@ timeThread.start()
 # set recording state
 controller.start()
 counter = 0
-while controller.isRecording:
-    driver.save_screenshot('shots/screenshot%d.png'%(counter))
-    counter += 1
-
+try:
+    while controller.isRecording:
+        print('\r recording %d'%(counter))
+        driver.save_screenshot('shots/screenshot%d.png'%(counter))
+        counter += 1
+except:
+    controller.stop()
+    print("An error occured")
+    exit(1)
 # close driver
 driver.close()
 
