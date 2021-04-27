@@ -5,7 +5,7 @@ Record Adobe Connect session video and merge it with session sound stream to a s
 ## Why and How
 
 Not every adobe connect classroom is downloadable and sometimes there are some restrictions by the service provider. But always there is at least one solution for every problem. In this case if you add **/output/file.zip?download.zip** to end of the link of adobe connect session you can download sound and video streams but they are not merged and you have to work with ffmpeg and merge them together.
-To give an example if your classroom link is something similar to *https://example.com/pt9pbrisgt0a/?session=breezbreezo8pdyckwkeus4dg5&proto=true* the downlaod link will be *https://example.com/pt9pbrisgt0a/output/file.zip?download=zip* .
+To give an example if your classroom link is something similar to *https://example.com/pt9pbrisgt0a/?session=breezbreezo8pdyckwkeus4dg5&proto=true* the download link will be *https://example.com/pt9pbrisgt0a/output/file.zip?download=zip* .
 
 Sometimes presenter decides to share document instead of sharing his/her own screen while displaying document and that causes some problems with the file downloaded before; it just contains sound stream(s) of class but no video will be available.  
 
@@ -15,7 +15,7 @@ There are some issues with this solution. First issue is with internet connectio
 Second issue is about the frame rate, it takes some time for selenium to save screenshot of **body** element and this is the reason why frame rate is about 5.8 .
 
 ## How to
-First install `ffmpeg`, `python` and firfox `geckodriver` and make sure they are all in **$PATH**.
+First install `ffmpeg`, `python` and firefox `geckodriver` and make sure they are all in **$PATH**.
 Then install dependencies:
 ```bash
 python -m pip install -r requirements.txt
@@ -25,7 +25,7 @@ or
 pip install -r requirements.txt
 ```
 
-After downloading class files extract all and move sound file to scripts directory.
+After downloading class files extract all and move sound stream to scripts directory.
 Setup execution permission for `start.sh`:
 ```bash
 sudo chmod 755 start.sh
