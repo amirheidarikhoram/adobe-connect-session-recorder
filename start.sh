@@ -50,7 +50,12 @@ echo "Duration: ${DURATION}"
 FRAME_RATE=`python video-recorder.py $1 ${DURATION}`
 
 echo "Creating video stream:"
-ffmpeg -r "${FRAME_RATE}" -f image2 -s 1920x1080 -i "shots/screenshot%d.png" -vcodec libx264 -crf 25 -pix_fmt yuv420p video-output.mp4
+
+# ffmpeg -r "${FRAME_RATE}" -f image2 -s 1920x1080 -i "shots/screenshot%d.png" -vcodec libx264 -crf 25 -pix_fmt yuv420p video-output.mp4
+# the above commented command can handle just 10000 frames and the rest will not be present in video
+# instead use command below with glob pattern to include all frames sorted
+
+ffmpeg -r "${FRAME_RATE}" -f image2 -s 1920x1080 -pattern_type glob -i "shots/*.png" -vcodec libx264 -crf 25 -pix_fmt yuv420p video-output.mp4
 
 echo "Creating sound stream:"
 ffmpeg -i "$2" -map 0:a -acodec adpcm_ima_wav sound-output.wav
